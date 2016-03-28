@@ -1,17 +1,15 @@
 do
 
 function run(msg, matches)
-  return 'NOD32-BOT v8'.. VERSION .. [[ 
+  return 'Fire Bot v'.. VERSION .. [[ 
  
-  Developer : @Behroozyaghi
+  Developer : @parsaalemi
   
-  Channel : @Nod32team
+  www.telegram.me/xxx_Firebot_xxx
   
-  Open git : https://github.com/BH-YAGHI/NOD32-BOT.git
+  Fire Bot VERSION 2
   
-  NOD32 VERSION 8
-  
-  All rights reserved.
+  We Are Powerfull.
   __________________]]
 end
 
