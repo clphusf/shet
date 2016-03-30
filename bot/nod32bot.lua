@@ -244,7 +244,8 @@ function create_config( )
     "time",
     "version",
     "welcome",
-    "webshot"
+    "webshot",
+    "anti-flood"
     },
 	    sudo_users = {105831687},--Sudo users
     disabled_channels = {},
