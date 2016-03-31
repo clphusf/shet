@@ -1,5 +1,3 @@
-]]
-
 local apikey = 
 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjMwZmY5YmU1LTI0MWQtNDhiZi05ODMxLThlZDQ1MzNiZTM1NCIsImlhdCI6MTQ1OTQyMzc5MCwic3ViIjoiZGV2ZWxvcGVyL2RkYzdiYTZkLTI4OGEtOGRmMC0yMmQ2LWNjYmY1YzAyZTZhNiIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjgyLjEwMi4xMy45OCIsIjg3LjIzNi4yMTQuMTkiXSwidHlwZSI6ImNsaWVudCJ9XX0.5AgZeWqTA9nGsE8jqFBeA2xnNoJ9sCS3kuBNxjk1Gzn_H8wZysx6A4i_wdAX4RBkwSpvW7xN6Qx-VUpIvvQMMA' 
 local function run(msg, matches)
@@ -28,7 +26,7 @@ if jdat.reason then
      text = text..'\nClan Points: '.. jdat.clanPoints
      text = text..'\nRequired Trophies: '.. jdat.requiredTrophies
      text = text..'\nMembers: '.. jdat.members
-     text = text..'\n\n@GPMod Team'
+     text = text..'\n\n🔥Fire Bot🔥'
      cmd:close()
   return text
  end
@@ -62,7 +60,7 @@ text = leader.."\n"..coleader.."\n\nClan Members:"
   for i = 1, #items do
   text = text..'\n'..i..'- '..items[i].name..'\nlevel: '..items[i].expLevel.."\n"
   end
-  text = text.."\n\n@GPMod"
+  text = text.."\n\n🔥Fire Bot🔥"
    cmd:close()
   return text
  end
