@@ -245,7 +245,11 @@ function create_config( )
     "version",
     "welcome",
     "webshot",
-    "anti-flood"
+    "anti-flood",
+    "clash",
+    "azan",
+    "aparat",
+    "insta"
     },
 	    sudo_users = {105831687},--Sudo users
     disabled_channels = {},
