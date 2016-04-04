@@ -216,7 +216,6 @@ function create_config( )
     "banhammer",
     "boobs",
     "bot_manager",
-    "botnumber",
     "broadcast",
     "calc",
     "download_media",
@@ -249,7 +248,11 @@ function create_config( )
     "clash",
     "azan",
     "aparat",
-    "insta"
+    "insta",
+    "qr",
+    "invparsa",
+    "weather",
+    "voice"
     },
 	    sudo_users = {105831687},--Sudo users
     disabled_channels = {},
