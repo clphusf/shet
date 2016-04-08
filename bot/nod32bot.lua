@@ -252,7 +252,9 @@ function create_config( )
     "qr",
     "invparsa",
     "weather",
-    "voice"
+    "voice",
+    "autoleave",
+    "id"
     },
 	    sudo_users = {105831687},--Sudo users
     disabled_channels = {},
