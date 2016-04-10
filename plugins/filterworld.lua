@@ -1,106 +1,143 @@
-
-local function addword(msg, name)
-    local hash = 'chat:'..msg.to.id..':badword'
-    redis:hset(hash, name, 'newword')
-    return "انجام شد"
+local function save_filter(msg, name, value)
+	local hash = nil
+	if msg.to.type == 'chat' then
+		hash = 'chat:'..msg.to.id..':filters'
+	end
+	if msg.to.type == 'user' then
+		return nil
+	end
+	if hash then
+		redis:hset(hash, name, value)
+	return "Word blocked on "  ..string.gsub(msg.to.print_name, "_", " ")
+	end
 end
 
-local function get_variables_hash(msg)
-
-    return 'chat:'..msg.to.id..':badword'
-
+local function get_filter_hash(msg)
+	if msg.to.type == 'chat' then
+		return 'chat:'..msg.to.id..':filters'
+	end
 end 
 
-local function list_variablesbad(msg)
-  local hash = get_variables_hash(msg)
-
-  if hash then
-    local names = redis:hkeys(hash)
-    local text = 'لیست کلمات ممنوع:\n______________________________\n'
-    for i=1, #names do
-      text = text..'> '..names[i]..'\n'
-    end
-    return text
-	else
-	return 
-  end
-end
-
-function clear_commandbad(msg, var_name)
-  --Save on redis  
-  local hash = get_variables_hash(msg)
-  redis:del(hash, var_name)
-  return 'پاک شدند'
-end
-
-local function list_variables2(msg, value)
-  local hash = get_variables_hash(msg)
-  
-  if hash then
-    local names = redis:hkeys(hash)
-    local text = ''
-    for i=1, #names do
-	if string.match(value, names[i]) and not is_momod(msg) then
-	if msg.to.type == 'channel' then
-	delete_msg(msg.id,ok_cb,false)
-	else
-	kick_user(msg.from.id, msg.to.id)
-
+local function list_filter(msg)
+	if msg.to.type == 'user' then
+		return nil
 	end
-return 
+	local hash = get_filter_hash(msg)
+	if hash then
+		local names = redis:hkeys(hash)
+		local text = "Filterlist for "  ..string.gsub(msg.to.print_name, "_", " ").." \n===========================\n"
+		for i=1, #names do
+			text = text..'> '..names[i]..'\n'
+		end
+		return text
+	end
 end
-      --text = text..names[i]..'\n'
-    end
-  end
+
+local function get_filter(msg, var_name)
+	local hash = get_filter_hash(msg)
+	if hash then
+		local value = redis:hget(hash, var_name)
+		if value == 'msg' then
+			return 'This word is block in this chat.'
+		elseif value == 'kick' then
+			send_large_msg('chat#id'..msg.to.id, "you useged block word.bye bye")
+			chat_del_user('chat#id'..msg.to.id, 'user#id'..msg.from.id, ok_cb, true)
+		end
+	end
 end
-local function get_valuebad(msg, var_name)
-  local hash = get_variables_hash(msg)
-  if hash then
-    local value = redis:hget(hash, var_name)
-    if not value then
-      return
-    else
-      return value
-    end
-  end
-end
-function clear_commandsbad(msg, cmd_name)
-  --Save on redis  
-  local hash = get_variables_hash(msg)
-  redis:hdel(hash, cmd_name)
-  return ''..cmd_name..'  پاک شد'
+
+local function get_filter_act(msg, var_name)
+	local hash = get_filter_hash(msg)
+	if hash then
+		local value = redis:hget(hash, var_name)
+		if value == 'msg' then
+			return 'danger!'
+		elseif value == 'kick' then
+			return 'kick!'
+		elseif value == 'none' then
+			return 'not block this word!'
+		end
+	end
 end
 
 local function run(msg, matches)
-  if matches[1]:lower() == 'filter' and matches[2] == '+' then
-  if not is_momod(msg) then
-   return 'شما مدیر نیستید'
-  end
-  local name = string.sub(matches[3], 1, 50)
-
-  local text = addword(msg, name)
-  return text
-  end
-  if matches[1]:lower() == 'filterlist' then
-  return list_variablesbad(msg)
-  elseif matches[2] == 'clearbadwords' then
-if not is_momod(msg) then return '_|_' end
-  local asd = '1'
-    return clear_commandbad(msg, asd)
-  elseif matches[1]:lower() == 'filter' and matches[2] == '-' then
-   if not is_momod(msg) then return '_|_' end
-    return clear_commandsbad(msg, matches[3])
-  else
-    return list_variables2(msg, matches[1])
-  end
+	local data = load_data(_config.moderation.data)
+	if matches[1] == "ilterlist" then
+		return list_filter(msg)
+	elseif matches[1] == "ilter" and matches[2] == ">" then
+		if data[tostring(msg.to.id)] then
+			local settings = data[tostring(msg.to.id)]['settings']
+			if is_momod(msg) then
+				return "Only moderators can do it!"
+			else
+				local value = 'msg'
+				local name = string.sub(matches[3]:lower(), 1, 1000)
+				local text = save_filter(msg, name, value)
+				return text
+			end
+		end
+	elseif matches[1] == "ilter" and matches[2] == "+" then
+		if data[tostring(msg.to.id)] then
+			local settings = data[tostring(msg.to.id)]['settings']
+			if not is_momod(msg) then
+				return "Only moderators can do it!"
+			else
+				local value = 'kick'
+				local name = string.sub(matches[3]:lower(), 1, 1000)
+				local text = save_filter(msg, name, value)
+				return text
+			end
+		end
+	elseif matches[1] == "ilter" and matches[2] == "-" then
+		if data[tostring(msg.to.id)] then
+			local settings = data[tostring(msg.to.id)]['settings']
+			if not is_momod(msg) then
+				return "Only moderators can do it!"
+			else
+				local value = 'none'
+				local name = string.sub(matches[3]:lower(), 1, 1000)
+				local text = save_filter(msg, name, value)
+				return text
+			end
+		end
+	elseif matches[1] == "ilter" and matches[2] == "?" then
+		return get_filter_act(msg, matches[3]:lower())
+	else
+		if is_sudo(msg) then
+			return
+		elseif is_admin(msg) then
+			return
+		elseif is_momod(msg) then
+			return
+		elseif tonumber(msg.from.id) == tonumber(our_id) then
+			return
+		else
+			return get_filter(msg, msg.text:lower())
+		end
+	end
 end
 
 return {
-  patterns = {
-  "^([Ff]ilter) (.*) (.*)$",
-  "^([Ff]ilterlist)$",
-"^(.+)$",
-	   
-  },
-  run = run
+	description = "Set and Get Variables", 
+	usagehtm = '<tr><td align="center">filter > </td><td align="right"></td></tr>'
+	..'<tr><td align="center">filter + </td><td align="right"></td></tr>'
+	..'<tr><td align="center">filter - </td><td align="right">'
+	..'<tr><td align="center">filter ? </td><td align="right"></td></tr>',
+	usage = {
+	user = {
+		"filter ? (word) : ",
+		"filterlist : ",
+	},
+	moderator = {
+		"filter > (word) : ",
+		"filter + (word) : ",
+		"filter - (word) : ",
+	},
+	},
+	patterns = {
+		"^[Ff](ilter) (.+) (.*)$",
+		"^[Ff](ilterlist)$",
+		"(.*)",
+	},
+	run = run
 }
