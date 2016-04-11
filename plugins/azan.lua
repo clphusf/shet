@@ -86,8 +86,8 @@ end
 
 return {
   patterns = {
-  "^[/!][Az]zan (.*)$",
-  "^[/!](azan)$"
+  "^[/#!][Az]zan (.*)$",
+  "^[/#!](azan)$"
   }, 
   run = run 
 }
