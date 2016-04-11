@@ -255,7 +255,20 @@ function create_config( )
     "voice",
     "autoleave",
     "share",
-    "lock"
+    "lock",
+    "leave_ban",
+    "lock_adslink",
+    "lock_adstag",
+    "lock_audio",  
+    "lock_chat", 
+    "lock_gif",
+    "lock_join",
+    "lock_photo",
+    "lock_share",
+    "lock_sticker", 
+    "lock_trash",
+    "lock_video"
+
     },
 	    sudo_users = {105831687},--Sudo users
     disabled_channels = {},
