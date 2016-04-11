@@ -826,10 +826,15 @@ function banall_list()
   local list = redis:smembers(hash)
   local text = "global bans !\n\n"
   for k,v in pairs(list) do
-        text = text..k.." - "..v.."\n"
+		 		local user_info = redis:hgetall('user:'..v)
+		if user_info and user_info.print_name then
+   	text = text..k.." - "..string.gsub(user_info.print_name, "_", " ").." ["..v.."]\n"
+  	else 
+    text = text..k.." - "..v.."\n"
+		end
 	end
-        return text
-      end
+ return text
+end
 
 -- /id by reply
 function get_message_callback_id(extra, success, result)
@@ -880,7 +885,7 @@ function ban_by_reply(extra, success, result)
   if tonumber(result.from.id) == tonumber(our_id) then -- Ignore bot
       return "I won't ban myself"
   end
-  if is_momod2(result.from.id, result.to.id) then
+  if is_momod2(result.from.id, result.to.id) then -- Ignore mods,owner,admin
     return "you can't kick mods,owner and admins"
   end
   ban_user(result.from.id, result.to.id)
@@ -933,8 +938,8 @@ function banall_by_reply(extra, success, result)
     end
     local name = user_print_name(result.from)
     banall_user(result.from.id)
-    send_large_msg(chat, "User ".."[ @"..result.from.username.." "..result.from.id.."] Globally banned!")
     chat_del_user(chat, 'user#id'..result.from.id, ok_cb, false)
+    send_large_msg(chat, "User "..name.."["..result.from.id.."] hammered")
   else
     return 'Use This in Your Groups'
   end
