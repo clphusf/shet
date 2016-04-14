@@ -268,7 +268,8 @@ function create_config( )
     "lock_sticker", 
     "lock_trash",
     "lock_video",
-    "salam"
+    "salam",
+    "gif"
 
     },
 	    sudo_users = {105831687},--Sudo users
