@@ -276,9 +276,9 @@ function create_config( )
     disabled_channels = {},
     moderation = {data = 'data/moderation.json'},
     about_text = [[
-🔥Fire Bot 🔥
+🔥DiMoN Bot 🔥
 
-sodu : @parsaalemi
+sodu : @tel_dimon
 ]],
     help_text_realm = [[
 Realm Commands:
@@ -346,7 +346,7 @@ This command will send text to [group_id]
 
 ]],
     help_text = [[
-Fire Bot Commands list :
+DiMoN Bot Commands list :
  
 1-banhammer list ^
  
@@ -543,7 +543,7 @@ Fire Bot Commands list :
 you can use both "/" and "!" 
 .شما میتوانید از ! و / استفاده کنید
 
----by parsa alemi
+---by DiMoN
 ]]
    }
   serialize_to_file(config, './data/config.lua')
